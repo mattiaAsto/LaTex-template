@@ -1,0 +1,148 @@
+% This file requires all the packages and sets up all the new commands and more
+
+
+
+% font package
+%\RequirePackage{libertine}
+
+% requiring packages
+\RequirePackage{graphicx}
+\RequirePackage{pdfpages}
+\RequirePackage{hyperref}
+\RequirePackage[normalem]{ulem} 
+\RequirePackage{xcolor}
+\RequirePackage{tocloft}
+\RequirePackage{atbegshi}
+
+
+\RequirePackage[paper=a4paper, margin=1in]{geometry}%smaller margins
+\RequirePackage{fancyhdr}
+\RequirePackage{lastpage}
+
+
+\RequirePackage[skip=4pt plus0pt, indent=0pt]{parskip}
+\RequirePackage{float}
+\RequirePackage{wrapfig}
+\RequirePackage{titlesec}
+\RequirePackage{array}
+\RequirePackage{tabularx}
+\RequirePackage{multirow}
+
+\RequirePackage[backend=biber]{biblatex}
+\RequirePackage[acronym, toc=true]{glossaries}
+
+% Setting height between glossaries rows and tabulation
+\makeatletter
+\renewenvironment{theglossary}%
+ {%
+   \begin{description}
+     \setlength{\leftmargin}{\parindent}
+     \setlength{\labelwidth}{-1.5em}
+     \setlength{\labelsep}{1em}
+     \setlength{\itemsep}{0.4\baselineskip}
+     \setlength{\topsep}{0.4\baselineskip}
+     \renewcommand*\glsnamefont[1]{\textbf{##1}}
+ }%
+ {%
+   \end{description}
+ }
+\makeatother
+
+
+
+
+
+
+% New comands
+\newcommand\reg{\textsuperscript{\textregistered}}
+\newcommand\myarrow{\textrightarrow \space}
+
+
+% Renewing commands for name of tables, TOC, Bib, ecc...
+\renewcommand*\contentsname{\vSummaryName}
+\renewcommand{\listfigurename}{\vListOfFiguresName}
+\renewcommand{\listtablename}{\vListOfTablesName}
+\renewcommand{\figurename}{\vFigureCaption}
+\renewcommand{\tablename}{\vTableCaption}
+
+
+
+
+% Command renewing
+\renewcommand{\labelitemi}{\normalfont -}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\titleclass{\subsubsubsection}{straight}[\subsection]
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+\renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}} % optional; useful if paragraphs are to be numbered
+
+\newcounter{attachment}
+\renewcommand{\theattachment}{\arabic{attachment}}
+
+\newcounter{sectionForHeader}
+
+\newcommand{\sectiontitle}{}
+\newcommand{\newsection}[1]{
+  \section{#1}
+  \label{sec:#1}
+  \setcounter{sectionForHeader}{\thesection}
+  \renewcommand{\sectiontitle}{\arabic{sectionForHeader} \space - #1}
+  }
+
+\let\oldsubsection\subsection
+\renewcommand{\subsection}[1]{
+  \oldsubsection{#1}
+  \label{sub:#1}
+}
+
+\let\oldsubsubsection\subsubsection
+\renewcommand{\subsubsection}[1]{
+  \oldsubsubsection{#1}
+  \label{subsub:#1}
+}
+
+
+
+
+
+
+
+
+
+% Imported paragraph, subparagraph, subsubusbsection settings
+\titleformat{\subsubsubsection}
+  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{5}{\z@}%
+  {3.25ex \@plus1ex \@minus.2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{6}{\parindent}%
+  {3.25ex \@plus1ex \@minus .2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries}}
+\def\toclevel@subsubsubsection{4}
+\def\toclevel@paragraph{5}
+\def\toclevel@paragraph{6}
+\def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
+\def\l@paragraph{\@dottedtocline{5}{10em}{5em}}
+\def\l@subparagraph{\@dottedtocline{6}{14em}{6em}}
+\makeatother
+
+\makeatletter
+\newcommand{\listofattachments}{%
+  \section*{\vListOfAttachmentsName}%
+  \@starttoc{loa}%
+}
+\let\l@attachment\l@figure
+\makeatother
+
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}

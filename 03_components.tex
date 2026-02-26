@@ -1,0 +1,68 @@
+\newsection{Composants}
+Cette partie de rapport sert seulement à donner des informations sur les composantes qui sont fondamentales pour la compréhension de la continuation 
+du rapport, pour toute info précise sur les composantes voir le document de labo \cite{cursor}
+
+Le circuit se compose de 3 platines différentes comme montré dans la figure \ref{fig:03_cursor_image_highlighted}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/03/cursor_image_phone_highlighted.png}
+    \caption{Les composants du curseur}
+    \label{fig:03_cursor_image_highlighted}
+\end{figure}
+
+Les parties principales sont:
+\begin{enumerate}
+    \item Assemblage avec chariot et \acrshort{PCB} (Bleu)
+    \item Carte de développement \acrshort{FPGA} (Rouge)
+    \item Carte de control avec 8 LEDS e 4 boutons (Vert)
+\end{enumerate}
+
+Encadrées en azure sont le moteur, le chariot et l'encodeur et en jaune sont toutes les connections de transmission des signaux et de l'alimentation des platines.
+
+\subsection{Moteur et control du moteur (pont en H)}
+
+Le chariot est propulsé par un moteur à courant continu 12\,V, piloté par un driver en pont en H (L6207) qui permet de gérer le 
+sens de rotation et la vitesse. Cette vitesse est modulée via un signal \acrshort{PWM} dont la fréquence ne doit pas excéder 
+100\,kHz pour respecter les limites du composant(\ref{sub:Dynamique du déplacement}).
+Le moteur entraîne une vis M12 x 1,75, transformant chaque rotation complète en un déplacement linéaire précis de 1,75\,mm.
+
+
+\subsubsection{Explication fréquence 100kHz}
+Selon un document de Portscap \cite{PWMFrequencyReference}, les paramètres a regarder pour choisir la fréquence de la dent de scie sont les suivantes:
+
+Une fréquence majeure de 20\,kHz est conseillée pour éviter des bruits audibles.
+
+Plus la fréquence est haute, plus le moteur réagit bien au signal \acrshort{PWM}, la période de la dent de scie est tellement courte que le signale d'alimentation est presque continu.
+
+La fréquence de 100\,kHz est la limite maximum pour obtenir un bon fonctionnement, à plus de 100\,kHz le "switching" des \glspl{mosfet} du pont H n'est pas garanti et peut donc causer des problèmes.
+
+100kHz est donc le bon compromis entre un fonctionnement fluide du moteur et la sécurité du circuit.
+
+Dans le cas de ce projet, le pont H utilisé est un L6207 de \href{https://www.st.com/content/st_com/en.html}{STMicreoelectronics\textsuperscript{\textregistered}}, 
+selon le \href{https://www.st.com/resource/en/datasheet/l6207.pdf}{datasheet} du pont, la fréquence maximale de travail est d'exactement 100kHz, voir extrait dans figure \ref{fig:03_hbridge_dsheet}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{pictures/03/03_hbridge_dsheet.png}
+    \caption{Extrait du datasheet du pont h}
+    \label{fig:03_hbridge_dsheet}
+\end{figure}
+
+
+\subsection{Encoder}
+
+L'angle de rotation de la vis est mesuré par un codeur incrémental (AEDB-9140-A12) \cite{cursor}. 
+Il génère 500 impulsions par tour (CPR) sur deux canaux, Channel A et Channel B. 
+En analysant le déphasage entre ces deux signaux, le système peut déterminer avec précision le sens de rotation et la position exacte du chariot. 
+Un troisième canal, Channel I (Index), fournit une impulsion de référence par tour complet. 
+Cependant le Channel I n’est pas utilisé.
+
+\subsubsection{Fréquence de clock}
+
+La fréquence d’horloge du système (clock) s’élève à 66 MHz lors de l’utilisation de la carte FPGA-EBS 2 \cite{cursor}.  
+Cette fréquence est imposée par l’oscillateur local qui génère le signal de référence nécessaire au cadencement de la puce Xilinx Spartan.
+
+
+
+

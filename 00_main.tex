@@ -1,0 +1,534 @@
+% This is the main file, it imports all the .sty settings, variables, packages, commands, ecc...
+% To add new sections use input{}
+
+
+\documentclass{article}
+
+\usepackage{content/00_custom}
+\usepackage{content/setup}
+\usepackage{hyperref}
+
+\definecolor{urlcolor}{RGB}{49, 138, 161}
+\definecolor{linkcolor}{RGB}{49, 138, 161}
+\definecolor{citecolor}{RGB}{49, 138, 161}
+
+
+\hypersetup{
+  colorlinks = true, %Colours links instead of ugly boxes
+  urlcolor   = urlcolor, %Colour for external hyperlinks
+  linkcolor  = linkcolor, %Colour of internal links
+  citecolor  = citecolor %Colour of citations
+}  
+
+
+% \usepackage[backend=biber]{biblatex}
+\addbibresource{content/myBib.bib}
+
+% \usepackage[acronym, toc]{glossaries}
+\makeglossaries
+
+\input{content/acronyms.tex}
+\input{content/glossary.tex}
+
+
+\begin{document}
+
+\input{content/title.tex}
+\newpage
+
+\pagestyle{fancy}
+\pagenumbering{Roman}
+\fancyhead[L]{\vDescription \space - \vAbstractName}
+\fancyhead[R]{
+    \raisebox{-0.4cm}[0pt][0pt]{
+        \includegraphics[height=1.2cm]{pictures/HEI-LOGO.png}
+  }
+}
+\fancyfoot[C]{\thepage}
+
+\input{content/abstract.tex}
+\newpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\fancyhead[L]{\vDescription \space - \vSummaryName}
+\fancyfoot[R]{\vPage}
+\fancyfoot[L]{\vAuthor}
+\fancyfoot[C]{\vYear}
+
+\tableofcontents
+\thispagestyle{fancy}
+\clearpage
+
+\fancyhead[L]{\sectiontitle}
+
+\input{01_Intro.tex}
+\clearpage
+\input{02_specification.tex}
+\clearpage
+\input{03_components.tex}
+\clearpage
+\input{04_logic.tex}
+\clearpage
+\input{4.1_Bloks.tex}
+\clearpage
+\input{4.2_extras.tex}
+\clearpage
+\input{05_Simulation.tex}
+\clearpage
+\input{06_Conclusion.tex}
+\clearpage
+
+
+\renewcommand{\sectiontitle}{Bibliography}
+\phantomsection
+\addcontentsline{toc}{section}{\vBibName}
+\printbibliography[title=\vBibName]
+\printglossary[title=\vGlossaryName]
+\printglossary[type=\acronymtype, title=\vAcrName]
+
+
+\renewcommand{\sectiontitle}{\vTablesAndAttachments}
+\label{sec:tablesAttachments}
+\phantomsection
+\thispagestyle{fancy}
+\listoffigures
+\addcontentsline{toc}{section}{\vListOfFiguresName}
+
+\phantomsection
+\thispagestyle{fancy}
+\listoftables
+\addcontentsline{toc}{section}{\vListOfTablesName}
+
+\phantomsection
+\thispagestyle{fancy}
+\listofattachments
+\addcontentsline{toc}{section}{\vListOfAttachmentsName}
+\clearpage
+
+\input{content/validation.tex}
+\newpage
+
+% ================= Full circuit =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Full circuit}
+\includepdf[
+  pages=1,
+  scale=.9,
+  angle=90,
+  pagecommand={
+    \phantomsection
+    \label{pdf:full_circuit}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Full circuit}}
+  }
+]{pdfs/full circuit.pdf}
+\clearpage
+
+
+% ================= Top level logic =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Top level logic}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=90,
+  pagecommand={
+    \phantomsection
+    \label{pdf:top_level_logic}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Top level logic}}
+  }
+]{pdfs/topLevelLogic/top_level_logic.pdf}
+\clearpage
+
+
+% ================= Button manager =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Button manager}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=90,
+  pagecommand={
+    \phantomsection
+    \label{pdf:button_manager}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Button manager}}
+  }
+]{pdfs/topLevelLogic/buttonManager_done/button_manager_logic.pdf}
+\clearpage
+
+
+% ================= Main controller =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Main controller}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:main_controller}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Main controller}}
+  }
+]{pdfs/topLevelLogic/mainController_done/main_controller_logic.pdf}
+\clearpage
+
+
+% ================= Button control FSM =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Button control FSM}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:button_control_fsm}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Button control FSM}}
+  }
+]{pdfs/topLevelLogic/mainController_done/buttonControlFSM_done/FSM.pdf}
+\clearpage
+
+
+% ================= Button control FSM extras =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Button control FSM extras}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:button_control_fsm_extras}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Button control FSM extras}}
+  }
+]{pdfs/topLevelLogic/mainController_done/buttonControlFSM_done/FSM_extras.pdf}
+\clearpage
+
+
+% ================= Counter 28 bits =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Counter 28 bits}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=90,
+  pagecommand={
+    \phantomsection
+    \label{pdf:counter_28_bits}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Counter 28 bits}}
+  }
+]{pdfs/topLevelLogic/mainController_done/counter_28_bits_done/counter_28_logic.pdf}
+\clearpage
+
+
+% ================= Rotation sous =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Rotation sous}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:rotation_sous}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Rotation sous}}
+  }
+]{pdfs/topLevelLogic/mainController_done/rotationSous_done/rotation_sous_logic.pdf}
+\clearpage
+
+
+% ================= Sous 1 bit =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Sous 1 bit}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:sous_1_bit}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Sous 1 bit}}
+  }
+]{pdfs/topLevelLogic/mainController_done/rotationSous_done/sous1bit_done/sous_1_bit_logic.pdf}
+\clearpage
+
+
+% ================= Motor control =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Motor control}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:motor_control}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Motor control}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/motor_control_logic.pdf}
+\clearpage
+
+
+% ================= Absolute counter =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Absolute counter}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:absolute_counter}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Absolute counter}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/absCounter_done/absCounter_logic.pdf}
+\clearpage
+
+
+% ================= Counter 1 bit =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Counter 1 bit}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:counter_1_bit}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Counter 1 bit}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/absCounter_done/counter1bit_done/counter_1_bit_logic.pdf}
+\clearpage
+
+
+% ================= Delta PWM =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Delta PWM}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:delta_pwm}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Delta PWM}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/addSous_done/deltaPWM_logic.pdf}
+\clearpage
+
+
+% ================= Change detector =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Change detector}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:change_detector}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Change detector}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/changeDetector_done/change_detector_logic.pdf}
+\clearpage
+
+
+% ================= Motor FSM output =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Motor FSM output}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:motor_fsm_output}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Motor FSM output}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/motorFSM/motor_FSM_out_logic.pdf}
+\clearpage
+
+
+% ================= Motor FSM logic =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Motor FSM logic}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:motor_fsm_logic}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Motor FSM logic}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/motorFSM/FSM_done/FSM_logic.pdf}
+\clearpage
+
+
+% ================= PWM generator =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - PWM generator}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:pwm_generator}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{PWM generator}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/PWMGenerator_done/PWM_generator_logic.pdf}
+\clearpage
+
+
+% ================= Comparator =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Comparator}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:comparator}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Comparator}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/PWMGenerator_done/comparator_done/comparator_logic.pdf}
+\clearpage
+
+
+% ================= Counter 8 bit =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Counter 8 bit}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:counter_8_bit}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Counter 8 bit}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/PWMGenerator_done/counter8bit_done/counter8Bit_logic.pdf}
+\clearpage
+
+
+% ================= 66 MHz to 100 kHz transformator =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - 66 MHz to 100 kHz transformator}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:transformator_66_100}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{66 MHz to 100 kHz transformator}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/PWMGenerator_done/transformator66MHzTo100kHz_done/transformator66_100_logic.pdf}
+\clearpage
+
+
+% ================= Relative counter PWM =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Relative counter PWM}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:relative_counter_pwm}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Relative counter PWM}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/relCounterPWM_done/rel_counter_PWM.pdf}
+\clearpage
+
+
+% ================= Counter 13 bit =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Counter 13 bit}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:counter_13_bit}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Counter 13 bit}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/relCounterPWM_done/counter13bit_done/counter_13_bit_logic.pdf}
+\clearpage
+
+
+% ================= Right shifter =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Right shifter}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:right_shifter}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Right shifter}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/relCounterPWM_done/rightShifter_done/right_schifter_logic.pdf}
+\clearpage
+
+
+% ================= All LEDs bus creator =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - All LEDs bus creator}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:all_leds_bus}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{All LEDs bus creator}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/allLedsBus/allledLedBusCreator.pdf}
+\clearpage
+
+
+% ================= LED power FSM =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - LED power FSM}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:led_power_fsm}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{LED power FSM}}
+  }
+]{pdfs/topLevelLogic/motorControl_done/ledPowerFSM/ledPowerFSM.pdf}
+\clearpage
+
+
+% ================= Register logic =================
+\refstepcounter{attachment}
+\renewcommand{\sectiontitle}{\vAttachments \theattachment\ \space - Register logic}
+\includepdf[
+  pages=-,
+  scale=.9,
+  angle=0,
+  pagecommand={
+    \phantomsection
+    \label{pdf:register_logic}
+    \addcontentsline{loa}{attachment}{\protect\numberline{\theattachment}{Register logic}}
+  }
+]{pdfs/topLevelLogic/reg1_2_done/register logic.pdf}
+\clearpage
+
+
+
+
+
+
+
+\end{document}

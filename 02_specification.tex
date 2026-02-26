@@ -1,0 +1,153 @@
+\newsection{Spécifications}
+
+La partie de hardware est déjà prête à utiliser, le composants sont décrit dans le chapitre \ref{sec:Composants}.
+
+\subsection{Fonctions et fonctionnement}%ALEX
+Les fonctions selon le cahier des charges \cite{cursor} sont les suivantes.
+
+1. Objectif Principal:
+
+L'objectif est de concevoir un système de contrôle pour un moteur à courant continu afin de déplacer précisément un chariot le long d'une vis vers des positions prédéfinies.
+
+2. Fonctions de Base Obligatoires:
+
+\begin{itemize}
+    \item Restart: Le curseur doit se déplacer vers la position initiale (position de départ), identifiée par un relais Reed (sensor1).
+    \item Position 1: Le chariot doit atteindre la position située à 8 cm.
+    \item Position 2: Le chariot doit atteindre la position située à 12 cm.
+\end{itemize}
+
+3. Profil de Vitesse (Rampes):
+
+Le déplacement ne se fait pas à vitesse constante. Pour les positions 1 et 2, le cycle doit être le suivant :
+\begin{itemize}
+    \item Accélération régulière jusqu'à la pleine vitesse.
+    \item Avance à pleine vitesse.
+    \item Décélération régulière pour s'arrêter précisément sur la position.
+\end{itemize}
+
+Note technique importante : Les rampes d'accélération et de décélération doivent dépendre de la position et non du temps \ref{sub:Dynamique du déplacement}. La distance de freinage/accélération doit être d'environ 1 cm.
+
+4. Matériel et Signaux:
+
+\begin{itemize}
+    \item Contrôle Moteur: Utilisation d'un pont en H (L6207). La vitesse est modulée par \acrshort{PWM} avec une fréquence maximale de 100 \,kHz \ref{subsub:Explication fréquence 100kHz}.
+    \item Capteurs de fin de course: Deux relais Reed détectent les limites physiques (gauche/droite) du rail.
+    \item Cerveau du système: Une carte FPGA (Spartan-3) cadencée à 66\,MHz (pour la carte EBS2).
+\end{itemize}
+
+
+\subsection{Signal et bus}
+Un signal en conception numérique est une information logique qui représente l'état d'un circuit, généralement 0 ou 1.
+Tandis q'un bus est un ensemble de signaux utilisé pour transporter des données sur plusieurs bits en parallèle \cite{lst}.
+\subsubsection{Types de signaux}
+En VHDL, le "std\_ulogic" est un type de signal logique à plusieurs valeurs, permettant de décrire plus fidèlement le comportement réel des circuits.
+
+Tous les signaux dans ce projet sont des "std\_ulogic" car le signal std\_ulogic est non résolu : un seul bloc peut le piloter. Tout conflit est détecté, ce qui évite les erreurs de conception. 
+
+
+\subsubsection{Types de bus}
+En VHDL, un bus "std\_ulogic\_vector" est un vecteur de signaux logiques à plusieurs valeurs, utilisé pour représenter fidèlement les états matériels (0, 1, indéterminé, etc.). 
+Il est non résolu, donc chaque bit ne peut être piloté que par une seule source, ce qui permet de détecter les conflits. 
+Ce type de bus est utilisé pour des transports de données interne.
+
+Un bus "unsigned" représente un nombre entier non signé. Il est destiné aux opérations arithmétiques (addition, comparaison…) 
+et s'utilise lorsque le bus transporte une valeur numérique plutôt que de simples niveaux logiques. 
+
+\subsection{Codification de la position}
+
+La codification de la position du curseur est sur 18 bits, le nombre de bits a été choisit avec la formule suivante:
+\begin{equation}
+   N_bits = \log_2(\frac{190}{\frac{1.75}{500*4}}) \approx 17.72 \rightarrow 18
+\end{equation}
+La position est représentée par un compteur itératif qui compte quand le chariot avance et décompter quand le chariot recule.
+
+Vù que les signaux A et B de l'encodeur changent 500 fois chaque tour et les deux sont décalé d'un demi-signal, l'état de l'ensemble de A et B change 2000 ($500*4$) fois par tour.
+La vis a un pas de 1.75mm le calcul $\frac{1.75}{2000}$ donne donc la précision maximal ($0.000875mm$) qu'il est possible d'atteindre avec l'encodeur et la vis utilisées.
+
+La longueur maximale du déplacement est d'env. 19cm, en divisant ça par la précision il est possible de trouver le nombre de steps que le compteur doit avoir.
+Le logarithme en base 2 retourne simplement le nombre de bit (à arrondir vers le haut) du compteur.
+
+Le sens de la rotation du moteur est obtenu en soustrayant la position-but à la position réelle du chariot.
+Si le nombre est négatif le chariot doit reculer, sinon avancer.
+
+
+\subsection{Dynamique du déplacement}%MATTIA
+
+Le curseur doit se déplacer comme dans l'image \ref{fig:02_moving_dynamic}, 
+avec une accélération au début et une décélération à la fin.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\linewidth]{pictures/02/moving_dynamic.png}
+    \caption{Déplacement du curseur \cite{cursor}}
+    \label{fig:02_moving_dynamic}
+\end{figure}
+
+Pour régler la vitesse du moteur un signal de \acrshort{PWM} est appliqué au signal side1 ou side2 du moteur (voir \ref{sub:Moteur et control du moteur (pont en H)} pour infos sur les signaux).
+
+La figure \ref{fig:02_PWM_system} montre le fonctionnement de \acrshort{PWM}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{pictures/02/PWM_system.png}
+    \caption{Fonctionnement de \acrshort{PWM} \cite{cursor}}
+    \label{fig:02_PWM_system}
+\end{figure}
+
+Un signal quelconque (en couleur dans l'image qui sera appelé "duty cycle") est comparé avec une dent de scie de fréquence 
+de 100\,kHz \ref{subsub:subsub:Explication fréquence 100kHz}, si le signal duty cycle est plus petit que la valeur de la dent de scie le signal de sortie \acrshort{PWM} est '1', 
+sinon '0'.
+
+De cette manière il est possible de moduler la duré du '1' par apport à une période de la dent de scie, si le signal est à '1' pendant la moité du temps 
+alors le moteur va bouger à 50\% de la vitesse maximale.
+
+La figure \ref{fig:02_PWM_scheme} est une schématisation simplifiée du fonctionnement de la \acrshort{PWM}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{pictures/02/PWM_scheme.png}
+    \caption{Schématisation de la \acrshort{PWM}}
+    \label{fig:02_PWM_scheme}
+\end{figure}
+
+La dent de scie de 100\,kHz est codée sur 8 bits et est générée dans le bloc tr66MHzto100kHz \ref{subsub:PWM Generator}.
+
+Le signal duty cycle est obtenu à travers un compteur itératif (compteur relatif) qui utilise le même "enable" du compteur de position,
+le compteur relatif est initialisé à la vitesse minimale \ref{subsub:Vitesse minimale}, pour accélérer le moteur, le compteur augmente, et 
+pour ralentir, le compteur décompte à la vitesse maximale. Un mux fait en sorte que l'enable n'arrivera pas au compteur pour le bloquer.
+
+Duty cycle est codé sur 14 bits mais se fait transformé en 8 bits par un right bit-shift 
+\footnote{Les premiers 8 bits du signal deviennent les 8 bits finales, c'est l'équivalent de faire une division par 64 et arrondir vers le bas} 
+de 6 bits. pour la comparaison avec la dent de scie.
+
+\subsubsection{Delta PWM et dimension du bit-shift}
+La \acrshort{PWM} peut se baser sur le temps ou sur le déplacement, cela dépend du enable utilisé pour le compteur du duty cycle.
+
+Soit l'enable se base su la fréquence du clock (basé sur le temps), soit, comme dans le cas de ce projet, le enable dépend du encodeur, du coup la distance 
+de l'accélération dépend de la distance parcourue par le chariot.
+
+Sans le bit-shift, le compteur va arriver à la vitesse maximale (255 ou "11111111") après 256 coup de clock.
+Ceci se traduit, en $256 * 0.000875mm = 0.224mm$, une distance beaucoup trop courte pour une accélération.
+
+En multipliant: $64 * (256 * 0.000875) = 14.336mm$ le résultat est beaucoup plus acceptable comme distance.
+
+L'équivalent en steps du compteur est 16'384, en réalité, vù que le moteur ne démarre pas à une vitesse nulle il y'a une partie de l'accélération qui est ignorée; 
+du coup le curseur ralentissait un peut trop tôt. La distance d'accélération a été réduite à 13'000 steps, soit env. 11.375mm.
+
+Le compteur relatif est donc à 14 bits et il y'à un bit-shift pour ralentir la variation du duty cycle et agrandir la distance d'accélération.
+
+\subsubsection{Vitesse minimale}
+
+Si le rapport entre le duty cycle et la dent de scie est trop bas, le signal de \acrshort{PWM} qui arrive au moteur génère une tension moyenne trop 
+basse pour que le moteur aille assez de puisance pour surpasser la friction interne et l'inertie mécanique.
+
+Il y'à donc un seuil duty cycle a surpasser pour faire bouger le moteur, cette dynamique a amené à quelque problème dans le fonctionnement du projet.
+Les détailles de la résolution sont dans le chapitre \ref{sec:Simulation et erreurs}.
+
+
+
+
+
+
+
