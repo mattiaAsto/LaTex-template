@@ -49,7 +49,7 @@
     "commands": [
       {
         "match": "\\.tex$",
-        "cmd": "start run_short.bat"
+        "cmd": "start .vscode/run_short.bat"
       }
     ]
   }

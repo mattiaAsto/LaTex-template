@@ -4,8 +4,8 @@
 
 \documentclass{article}
 
-\usepackage{content/00_custom}
-\usepackage{content/setup}
+\usepackage{content/10_custom}
+\usepackage{content/00_setup}
 \usepackage{hyperref}
 
 \definecolor{urlcolor}{RGB}{49, 138, 161}
@@ -22,18 +22,18 @@
 
 
 % \usepackage[backend=biber]{biblatex}
-\addbibresource{content/myBib.bib}
+\addbibresource{content/03_myBib.bib}
 
 % \usepackage[acronym, toc]{glossaries}
 \makeglossaries
 
-\input{content/acronyms.tex}
-\input{content/glossary.tex}
+\input{content/04_acronyms.tex}
+\input{content/05_glossary.tex}
 
 
 \begin{document}
 
-\input{content/title.tex}
+\input{content/01_title.tex}
 \newpage
 
 \pagestyle{fancy}
@@ -46,7 +46,7 @@
 }
 \fancyfoot[C]{\thepage}
 
-\input{content/abstract.tex}
+\input{content/02_abstract.tex}
 \newpage
 
 \pagenumbering{arabic}
