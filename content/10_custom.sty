@@ -6,22 +6,18 @@
 %\RequirePackage{libertine}
 
 % requiring packages
-\RequirePackage{graphicx}
-\RequirePackage{pdfpages}
-\RequirePackage{hyperref}
+\RequirePackage{graphicx} %use of \includegraphics
+\RequirePackage{pdfpages} %use of \includepdf
+\RequirePackage{hyperref} %use of \href, \url, \hyperref
 \RequirePackage[normalem]{ulem} 
 \RequirePackage{xcolor}
 \RequirePackage{tocloft}
 \RequirePackage{atbegshi}
 \RequirePackage{pgfplots}
-
-
-
-\RequirePackage[paper=a4paper, margin=1in]{geometry}%smaller margins
+\RequirePackage{pgfplotstable}
+\RequirePackage[paper=a4paper, margin=.9in]{geometry} %smaller margins
 \RequirePackage{fancyhdr}
 \RequirePackage{lastpage}
-
-
 \RequirePackage[skip=4pt plus0pt, indent=0pt]{parskip}
 \RequirePackage{float}
 \RequirePackage{wrapfig}
@@ -29,9 +25,17 @@
 \RequirePackage{array}
 \RequirePackage{tabularx}
 \RequirePackage{multirow}
-
 \RequirePackage[backend=biber]{biblatex}
 \RequirePackage[acronym, toc=true]{glossaries}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{booktabs}
+\RequirePackage{gensymb}
+\RequirePackage{verbatim}
+
+
+
 
 % Setting height between glossaries rows and tabulation
 \makeatletter
